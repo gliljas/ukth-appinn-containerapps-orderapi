@@ -27,7 +27,7 @@ jobs:
       - name: Log in to container registry
         uses: docker/login-action@v1
         with:
-          registry: hackathon20220620acr.azurecr.io
+          registry: hackathon20220620acr.azurecr.io
           username: ${{ secrets.QUEUEREADER_REGISTRY_USERNAME }}
           password: ${{ secrets.QUEUEREADER_REGISTRY_PASSWORD }}
 
@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: hackathon20220620acr.azurecr.io/queuereader:${{ github.sha }}
+          tags: hackathon20220620acr.azurecr.io/queuereader:${{ github.sha }}
           file: ./queuereaderapp/Dockerfile
           context: ./queuereaderapp/
 
@@ -56,5 +56,5 @@ jobs:
         with:
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp registry set -n queuereader -g hackathon20220620-rg --server hackathon20220620acr.azurecr.io --username  ${{ secrets.QUEUEREADER_REGISTRY_USERNAME }} --password ${{ secrets.QUEUEREADER_REGISTRY_PASSWORD }}
-            az containerapp update -n queuereader -g hackathon20220620-rg --image hackathon20220620acr.azurecr.io/queuereader:${{ github.sha }}
+            az containerapp registry set -n queuereader -g hackathon20220620-rg --server hackathon20220620acr.azurecr.io --username  ${{ secrets.QUEUEREADER_REGISTRY_USERNAME }} --password ${{ secrets.QUEUEREADER_REGISTRY_PASSWORD }}
+            az containerapp update -n queuereader -g hackathon20220620-rg --image hackathon20220620acr.azurecr.io/queuereader:${{ github.sha }}
