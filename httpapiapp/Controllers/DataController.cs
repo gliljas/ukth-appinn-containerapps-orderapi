@@ -6,6 +6,7 @@ namespace HttpApi.Controllers
     using Microsoft.Extensions.Logging;
     using System;
     using System.Threading.Tasks;
+    using System.Net.Http;
 
     [ApiController]
     [Route("[controller]")]
@@ -29,11 +30,13 @@ namespace HttpApi.Controllers
         }
 
         [HttpPost]
-        public async Task PostAsync()
+        public async Task PostAsync(string message)
         {
             try
             {
-                await queueClient.SendMessageAsync(Guid.NewGuid().ToString());
+                // await queueClient.SendMessageAsync(Guid.NewGuid().ToString());
+                //TODO: Fix, message is not being sent.
+                await queueClient.SendMessageAsync(DateTimeOffset.Now.ToString() + " -- " + message);
 
                 Ok();
             }
@@ -43,6 +46,14 @@ namespace HttpApi.Controllers
 
                 this.Response.StatusCode = 503;
                 this.Response.Headers.Add("Retry-After", "10");
+            }
+            catch (HttpRequestException hre)
+            {
+                logger.LogError($"Something went wrong writing to the store: {hre.Message}");
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"Something went wrong: {e.Message}");
             }
         }
     }
